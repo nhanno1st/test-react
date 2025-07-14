@@ -2,6 +2,8 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { useCart } from '../Context/CartProvider';
 
 interface BuyerFormData {
   name: string;
@@ -16,15 +18,19 @@ const schema = yup.object({
 });
 
 export default function BuyerForm() {
+  const navigate = useNavigate();
+  const { clearCart } = useCart();
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
   } = useForm<BuyerFormData>({ resolver: yupResolver(schema), mode: "onChange" });
 
-  const onSubmit = (data: BuyerFormData) => {
+const onSubmit = (data: BuyerFormData) => {
     console.log('Buyer Info:', data);
     toast.success('Buyer information submitted successfully!');
+    clearCart();              
+    navigate('/');      
   };
 
 return (
